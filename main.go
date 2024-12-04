@@ -32,11 +32,5 @@ func main() {
 	}
 	wg.Wait() //Esperar a que todas las gorutinas finalicen
 
-	// Imprimir los resultados finales
-	for _, result := range services.GetFinalResults() {
-		log.Println("Names Bird: \n", result.Name)
-		log.Println("Data Wikipedia: \n", result.DataWikipedia)
-	}
-
 	log.Println("Procesamiento completado.")
 }
