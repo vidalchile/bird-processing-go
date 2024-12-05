@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch Go Program", // Nombre de la configuración.
+        "type": "go", // Esto indica que es un programa Go.
+        "request": "launch", // Esto indica que quieres lanzar el programa en modo de depuración.
+        "mode": "debug", // Modo de depuración.
+        "program": "${workspaceFolder}", // Asegura que el depurador ejecute el programa que está en la carpeta de trabajo actual de VS Code.
+        "env": {},
+        "args": []
+      }
+    ]
+  }
+  

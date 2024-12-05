@@ -1,71 +1,62 @@
 package services
 
 import (
+	"fmt"
 	"log"
-	"sync"
-
 	"project/apis"
 	"project/models"
 )
 
-type BirdName struct {
-	Spanish string `json:"spanish"`
-	English string `json:"english"`
-	Latin   string `json:"latin"`
-}
-
-type FinalResultWikipedia struct {
-	Name          BirdName `json:"name"`
-	Map           any      `json:"map"`
-	Iucn          any      `json:"iucn"`
-	Migration     bool     `json:"migration"`
-	Dimorphism    bool     `json:"dimorphism"`
-	Size          string   `json:"size"`
-	Order         string   `json:"order"`
-	Species       string   `json:"species"`
-	Images        any      `json:"images"`
-	Audio         any      `json:"audio"`
-	DataWikipedia any
-}
-
-var finalResults []FinalResultWikipedia
-var mu sync.Mutex // Para proteger el acceso a finalResults
-
 // ProcessRecord procesa un registro llamando a las APIs X2 y X3
-func ProcessRecord(record models.Bird, wg *sync.WaitGroup) {
-
-	/*Siempre que lances una gorutina, coloca wg.Done() al principio de la función usando defer.
-	Esto asegura que, sin importar cómo termine la tarea (exitosamente o con error),
-	el contador del WaitGroup disminuirá correctament*/
-	defer wg.Done()
-
+func ProcessRecord(record models.Bird) error {
 	// Obtener detalle de la ave
-	detailBird, err := apis.CallDetailBirdAPI(record.Links.Self)
+	birdDetail, err := getBirdDetail(record)
 	if err != nil {
-		log.Printf("Error en API Detail Bird para registro %s: %v\n", record.UID, err)
-		return
+		return fmt.Errorf("Error obteniendo detalles de la ave: %v", err)
 	}
 
 	// Llamar a la API WIKIPEDIA
-	wikipediaExtract, err := apis.CallWikipediaAPI(record.Name.Latin)
+	// birdExtract, err := getBirdExtract(record.Name.Latin)
 	if err != nil {
-		log.Printf("Error en API WikipediaAP para registro %s: %v\n", record.UID, err)
-		return
+		return fmt.Errorf("Error obteniendo datos de Wikipedia: %v", err)
 	}
 
-	log.Println("Names Bird: \n", BirdName(record.Name))
-	log.Println("Map: \n", detailBird.Map)
-	log.Println("Iucn: \n", detailBird.Iucn)
-	log.Println("Migration: \n", detailBird.Migration)
-	log.Println("Dimorphism: \n", detailBird.Dimorphism)
-	log.Println("Size: \n", detailBird.Size)
-	log.Println("Order: \n", detailBird.Order)
-	log.Println("Species: \n", detailBird.Species)
-	log.Println("Images: \n", detailBird.Images)
-	log.Println("Audio: \n", detailBird.Audio)
-	log.Println("Data Wikipedia: \n", wikipediaExtract)
-
 	// Log de resultados
-	log.Printf("Registro %s procesado exitosamente.\n", record.UID)
+	logResults(record, birdDetail, "")
+	return nil
+}
 
+// getBirdDetail obtiene los detalles de una ave desde la API
+func getBirdDetail(record models.Bird) (*apis.ResultBirdDetail, error) {
+	detailBird, err := apis.GetBirdDetail(record.Links.Self)
+	if err != nil {
+		return nil, err
+	}
+	return &detailBird, nil
+}
+
+// getBirdExtract obtiene la información de Wikipedia de la ave
+func getBirdExtract(latinName string) (string, error) {
+	wikipediaExtract, err := apis.GetBirdExtract(latinName)
+	if err != nil {
+		return "", err
+	}
+	return wikipediaExtract, nil
+}
+
+// logResults maneja el logging de los resultados obtenidos
+func logResults(record models.Bird, birdDetail *apis.ResultBirdDetail, birdExtract string) {
+	log.Printf("Procesando registro %s...\n", record.UID)
+	log.Printf("Nombre en español: %s, Nombre en inglés: %s, Nombre en latín: %s", record.Name.Spanish, record.Name.English, record.Name.Latin)
+	log.Println("Mapa: ", birdDetail.Map)
+	log.Println("IUCN: ", birdDetail.Iucn)
+	log.Println("Migración: ", birdDetail.Migration)
+	log.Println("Dimorfismo: ", birdDetail.Dimorphism)
+	log.Println("Tamaño: ", birdDetail.Size)
+	log.Println("Orden: ", birdDetail.Order)
+	log.Println("Especie: ", birdDetail.Species)
+	log.Println("Imágenes: ", birdDetail.Images)
+	log.Println("Audio: ", birdDetail.Audio)
+	log.Printf("Registro %s procesado exitosamente.\n", record.UID)
+	log.Println("-------------------------------------------------------------------")
 }

@@ -1,11 +1,22 @@
 package apis
 
-import (
-	"project/models"
-)
+import "project/models"
 
-// SimulateAPIX1 simula la API X1 devolviendo datos de aves
-func SimulateAPIX1() ([]models.Bird, error) {
+type ResultBirdDetail struct {
+	Uid        string `json:"uid"`
+	Map        any    `json:"map"`
+	Iucn       any    `json:"iucn"`
+	Migration  bool   `json:"migration"`
+	Dimorphism bool   `json:"dimorphism"`
+	Size       string `json:"size"`
+	Order      string `json:"order"`
+	Species    string `json:"species"`
+	Images     any    `json:"images"`
+	Audio      any    `json:"audio"`
+}
+
+// Llamada a la API de Chilean Birds para obtener listado de aves (TEST 2 aves)
+func GetBirdsTest() ([]models.Bird, error) {
 	records := []models.Bird{
 		{
 			UID: "76-buteo-albigula",
@@ -38,7 +49,7 @@ func SimulateAPIX1() ([]models.Bird, error) {
 				Thumb: "https://aves.ninjas.cl/api/site/assets/files/3102/18082018072023pato_juarjual_pedro_valencia_web.200x0.jpg",
 			},
 			Links: models.BirdLinks{
-				Self:   "https://aves.ninjas.cl/api/birds/46-lophonetta-specularioides",
+				Self:   "https://aves.ninjas.cl/api/birds/98-haematopus-palliatus",
 				Parent: "https://aves.ninjas.cl/api/birds",
 			},
 			Sort: 1,
@@ -46,4 +57,30 @@ func SimulateAPIX1() ([]models.Bird, error) {
 	}
 
 	return records, nil
+}
+
+// Llamada a la API de Chilean Birds para obtener listado de aves
+func GetBirds() ([]models.Bird, error) {
+	url := "https://aves.ninjas.cl/api/birds"
+
+	var records []models.Bird
+
+	err := fetchWithRetry(url, &records)
+	if err != nil {
+		return records, err
+	}
+
+	return records, nil
+}
+
+// Llamada a la API de Chilean Birds para obtener el detalle de una ave
+func GetBirdDetail(url string) (ResultBirdDetail, error) {
+	var apiResponse ResultBirdDetail
+
+	err := fetchWithRetry(url, &apiResponse)
+	if err != nil {
+		return ResultBirdDetail{}, err
+	}
+
+	return apiResponse, nil
 }
