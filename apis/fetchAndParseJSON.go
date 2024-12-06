@@ -11,9 +11,6 @@ import (
 
 // Función auxiliar para hacer la solicitud HTTP y deserializar la respuesta JSON.
 func fetchAndParseJSON(url string, response interface{}) error {
-	// Asegurarse de que no haya barras extra en la URL
-	// url = strings.ReplaceAll(url, "//", "/")
-
 	log.Println(">>> url: ", url)
 
 	// Crear un cliente HTTP para agregar las cabeceras
@@ -55,9 +52,6 @@ func fetchAndParseJSON(url string, response interface{}) error {
 	if err != nil {
 		return fmt.Errorf("error al deserializar la respuesta JSON: %v", err)
 	}
-
-	// Agregar un pequeño retraso de 500ms para evitar hacer demasiadas solicitudes de golpe
-	// time.Sleep(500 * time.Millisecond)
 
 	return nil
 }
