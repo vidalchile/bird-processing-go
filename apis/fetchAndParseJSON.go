@@ -57,7 +57,7 @@ func fetchAndParseJSON(url string, response interface{}) error {
 	}
 
 	// Agregar un pequeño retraso de 500ms para evitar hacer demasiadas solicitudes de golpe
-	time.Sleep(500 * time.Millisecond)
+	// time.Sleep(500 * time.Millisecond)
 
 	return nil
 }

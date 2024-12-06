@@ -17,9 +17,9 @@ func ProcessRecord(record models.Bird) error {
 
 	// Llamar a la API WIKIPEDIA
 	// birdExtract, err := getBirdExtract(record.Name.Latin)
-	if err != nil {
+	/* if err != nil {
 		return fmt.Errorf("Error obteniendo datos de Wikipedia: %v", err)
-	}
+	} */
 
 	// Log de resultados
 	logResults(record, birdDetail, "")

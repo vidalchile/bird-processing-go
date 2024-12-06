@@ -24,6 +24,7 @@ func main() {
 
 	// Paso 2: Usar un grupo de trabajadores limitados para procesar los registros concurrentemente
 	var wg sync.WaitGroup
+
 	// Canal para limitar el número de solicitudes concurrentes
 	sem := make(chan struct{}, maxConcurrentRequests)
 
