@@ -23,11 +23,6 @@ type Page struct {
 	} `json:"thumbnail"`
 }
 
-func buildURL(base string, pathSegments ...string) string {
-	// Usa strings.Join para combinar los segmentos con una sola barra '/'
-	return fmt.Sprintf("%s/%s", base, strings.Join(pathSegments, "/"))
-}
-
 // reemplaza los espacios en blanco de una cadena con "_"
 func ReplaceSpacesWithUnderscore(input string) string {
 	return strings.ReplaceAll(input, " ", "_")
@@ -35,12 +30,12 @@ func ReplaceSpacesWithUnderscore(input string) string {
 
 // Llamada a la API de Wikipedia
 func GetBirdExtract(nameBird string) (string, error) {
-	url := fmt.Sprintf(buildURL("https://es.wikipedia.org/w/api.php?action=query&format=json&titles=%s&prop=extracts|pageimages&explaintext=true&ppprop=original&origin=*"),
+	url := fmt.Sprintf("https://es.wikipedia.org/w/api.php?action=query&format=json&titles=%s&prop=extracts|pageimages&explaintext=true&ppprop=original&origin=*",
 		ReplaceSpacesWithUnderscore(nameBird))
 
 	var apiResponse WikipediaAPIResponse
 
-	err := fetchAndParseJSON(url, &apiResponse)
+	err := fetchWithRetry(url, &apiResponse)
 	if err != nil {
 		return "", err
 	}

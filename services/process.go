@@ -16,8 +16,8 @@ func ProcessRecord(record models.Bird) error {
 	}
 
 	// Llamar a la API WIKIPEDIA
-	// birdExtract, err := getBirdExtract(record.Name.Latin)
-	/* if err != nil {
+	/* birdExtract, err := getBirdExtract(record.Name.Latin)
+	if err != nil {
 		return fmt.Errorf("Error obteniendo datos de Wikipedia: %v", err)
 	} */
 
@@ -46,7 +46,7 @@ func getBirdExtract(latinName string) (string, error) {
 
 // logResults maneja el logging de los resultados obtenidos
 func logResults(record models.Bird, birdDetail *apis.ResultBirdDetail, birdExtract string) {
-	log.Printf("Procesando registro %s...\n", record.UID)
+	log.Printf("Procesando registro %s...\n", record.Name.Latin)
 	log.Printf("Nombre en español: %s, Nombre en inglés: %s, Nombre en latín: %s", record.Name.Spanish, record.Name.English, record.Name.Latin)
 	log.Println("Mapa: ", birdDetail.Map)
 	log.Println("IUCN: ", birdDetail.Iucn)
@@ -57,6 +57,16 @@ func logResults(record models.Bird, birdDetail *apis.ResultBirdDetail, birdExtra
 	log.Println("Especie: ", birdDetail.Species)
 	log.Println("Imágenes: ", birdDetail.Images)
 	log.Println("Audio: ", birdDetail.Audio)
+	// log.Println("birdExtract: ", birdExtract)
+
+	// Solo loguear si existe información de Wikipedia
+	/* if birdExtract != "" {
+		log.Println("Información de Wikipedia encontrada:")
+		log.Println("birdExtract: Tiene informacion en wikipedia")
+	} else {
+		log.Printf("No se encontró información de Wikipedia para esta ave %s.", record.UID)
+	} */
+
 	log.Printf("Registro %s procesado exitosamente.\n", record.UID)
 	log.Println("-------------------------------------------------------------------")
 }
