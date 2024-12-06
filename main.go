@@ -31,10 +31,9 @@ func main() {
 	for _, record := range records {
 		log.Println(">>> nombree: ", record.Name.Latin) // Registramos el nombre de la ave en formato latino.
 
-		// Aseguramos que el canal tenga espacio para una nueva solicitud. Si no hay espacio, el programa espera.
-		sem <- struct{}{} // Enviamos un valor vacío al canal. Esto actúa como un semáforo.
-
-		wg.Add(1) // Indicamos que estamos esperando una nueva goroutine. Aumentamos el contador de WaitGroup.
+		// Asegurarse de que el canal tiene espacio para una nueva solicitud
+		sem <- struct{}{} // **Aquí es donde se ingresa información al canal (envío de un valor vacío).**
+		wg.Add(1)         // Indicamos que estamos esperando una nueva goroutine.
 
 		// Lanzamos una goroutine para procesar el registro de la ave de forma concurrente.
 		go func(record models.Bird) {
@@ -43,8 +42,8 @@ func main() {
 			// Llamamos a la función 'ProcessRecord' para procesar el registro de la ave.
 			services.ProcessRecord(record)
 
-			// Liberamos el canal para permitir que otra goroutine comience.
-			<-sem // Recibimos un valor del canal. Esto libera el semáforo y permite que otro proceso comience.
+			// Liberamos el canal cuando termine la goroutine
+			<-sem // **Aquí es donde se extrae (recibe) un valor del canal, liberando espacio para otra goroutine.**
 		}(record)
 
 		processedCount++ // Aumentamos el contador de registros procesados.

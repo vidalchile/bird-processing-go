@@ -47,5 +47,5 @@ func GetBirdExtract(nameBird string) (string, error) {
 		}
 	}
 
-	return "", errors.New("no se encontró una descripción para el pájaro en Wikipedia")
+	return "", errors.New("No se encontró una descripción para el pájaro " + nameBird + " en Wikipedia")
 }
