@@ -35,7 +35,7 @@ func GetBirdExtract(nameBird string) (string, error) {
 
 	var apiResponse WikipediaAPIResponse
 
-	err := fetchWithRetry(url, &apiResponse)
+	err := fetchWithRetry(url, &apiResponse, true)
 	if err != nil {
 		return "", err
 	}

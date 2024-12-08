@@ -65,7 +65,7 @@ func GetBirds() ([]models.Bird, error) {
 
 	var records []models.Bird
 
-	err := fetchWithRetry(url, &records)
+	err := fetchWithRetry(url, &records, true)
 	if err != nil {
 		return records, err
 	}
@@ -77,7 +77,7 @@ func GetBirds() ([]models.Bird, error) {
 func GetBirdDetail(url string) (ResultBirdDetail, error) {
 	var apiResponse ResultBirdDetail
 
-	err := fetchWithRetry(url, &apiResponse)
+	err := fetchWithRetry(url, &apiResponse, true)
 	if err != nil {
 		return ResultBirdDetail{}, err
 	}
