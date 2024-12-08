@@ -20,17 +20,14 @@ var customClient = &http.Client{
 		},
 		// Configuración de red para manejar las conexiones de red
 		DialContext: (&net.Dialer{
-			Timeout:   10 * time.Second, // Tiempo de espera para la conexión antes de dar error
-			KeepAlive: 10 * time.Second, // Mantener la conexión abierta por 10 segundos
+			Timeout:   30 * time.Second, // Tiempo de espera para la conexión antes de dar error
+			KeepAlive: 30 * time.Second, // Mantener la conexión abierta por 10 segundos
 		}).DialContext,
 	},
 }
 
 // fetchAndParseJSON realiza una solicitud HTTP y deserializa la respuesta JSON en el objeto `response` proporcionado.
 func fetchAndParseJSON(url string, response interface{}, useCustomClient bool) error {
-	// Registro de la URL a la que se hará la solicitud
-	log.Println(">>> url: ", url)
-
 	// Crear un cliente HTTP estándar (por defecto)
 	client := &http.Client{}
 

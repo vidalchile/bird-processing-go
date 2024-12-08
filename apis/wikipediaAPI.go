@@ -1,7 +1,6 @@
 package apis
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 )
@@ -47,5 +46,6 @@ func GetBirdExtract(nameBird string) (string, error) {
 		}
 	}
 
-	return "", errors.New("No se encontró una descripción para el pájaro " + nameBird + " en Wikipedia")
+	return "", nil
+	// return "", errors.New("No se encontró una descripción para el pájaro " + nameBird + " en Wikipedia")
 }

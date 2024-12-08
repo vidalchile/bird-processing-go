@@ -29,8 +29,6 @@ func main() {
 
 	// Iteramos sobre todos los registros de aves obtenidos desde la API.
 	for _, record := range records {
-		log.Println(">>> nombree: ", record.Name.Latin) // Registramos el nombre de la ave en formato latino.
-
 		// Asegurarse de que el canal tiene espacio para una nueva solicitud
 		sem <- struct{}{} // **Aquí es donde se ingresa información al canal (envío de un valor vacío).**
 		wg.Add(1)         // Indicamos que estamos esperando una nueva goroutine.
