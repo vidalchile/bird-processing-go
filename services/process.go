@@ -42,11 +42,13 @@ func ProcessRecord(record models.Bird) error {
 		birdExtract, err := getBirdExtract(record.Name.Latin)
 		if err != nil {
 			// Si ocurre un error al obtener el extracto de Wikipedia, se envía el error al canal
+			log.Println("Error obteniendo extracto de Wikipedia para: ", record.Name.Latin)
 			resultChannel <- Result{Error: fmt.Errorf("Error obteniendo extracto de Wikipedia para %s: %v", record.Name.Latin, err)}
 		} else if birdExtract != "" {
 			// Si se obtiene un extracto, se indica que la información de Wikipedia fue encontrada
 			resultChannel <- Result{BirdExtract: fmt.Sprintf("Información de Wikipedia encontrada para %s", record.Name.Latin)}
 		} else {
+			log.Println("Error No se encontró información de Wikipedia para: ", record.Name.Latin)
 			// Si no se encuentra información, se envía un mensaje indicando que no se halló
 			resultChannel <- Result{BirdExtract: fmt.Sprintf("No se encontró información de Wikipedia para %s", record.Name.Latin)}
 		}
