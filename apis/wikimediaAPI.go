@@ -2,6 +2,7 @@ package apis
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 	"sync"
 	"time"
@@ -136,11 +137,11 @@ type GetBirdImageDetailResult struct {
 func GetBirdImageDetail(title string, resultChan chan<- GetBirdImageDetailResult, wg *sync.WaitGroup) {
 	defer wg.Done() // Asegura que el contador se disminuye una vez termine esta goroutine.
 
-	url := fmt.Sprintf("https://en.wikipedia.org/w/api.php?action=query&prop=imageinfo&iiprop=extmetadata|user|url&titles=File:%s&format=json", ReplaceSpacesWithUnderscore(title))
+	urlBirdDetail := "https://en.wikipedia.org/w/api.php?action=query&prop=imageinfo&iiprop=extmetadata|user|url&titles=File:" + url.QueryEscape(title) + "&format=json"
 
 	var apiResponse ResponseImageData
 
-	err := fetchWithRetry(url, &apiResponse, true)
+	err := fetchWithRetry(urlBirdDetail, &apiResponse, true)
 	if err != nil {
 		return
 	}
@@ -149,10 +150,14 @@ func GetBirdImageDetail(title string, resultChan chan<- GetBirdImageDetailResult
 	freeLicenses := []string{
 		"CC BY 2.0",
 		"CC BY-SA 2.0",
+		"CC BY 2.5",
+		"CC BY-SA 2.5",
 		"CC BY 3.0",
 		"CC BY-SA 3.0",
 		"CC BY 4.0",
 		"CC BY-SA 4.0",
+		"CC0 1.0",
+		"CC0",
 	}
 
 	// Procesar los datos del JSON
@@ -200,7 +205,7 @@ func GetAllBirdImageDetails(nameBird string) ([]GetBirdImageDetailResult, error)
 	// Crear un arreglo para almacenar todos los resultados
 	var allImages []GetBirdImageDetailResult
 
-	url := fmt.Sprintf("https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srsearch=%s&srnamespace=6&utf8=&srlimit=10",
+	url := fmt.Sprintf("https://commons.wikimedia.org/w/api.php?action=query&format=json&list=search&srsearch=%s&srnamespace=6&utf8=&srlimit=15",
 		ReplaceSpacesWithUnderscore(nameBird))
 
 	var apiResponse WikimediaAPIResponse
@@ -210,16 +215,16 @@ func GetAllBirdImageDetails(nameBird string) ([]GetBirdImageDetailResult, error)
 		return []GetBirdImageDetailResult{}, err
 	}
 
-	fmt.Printf("Resultados totales: %d\n", apiResponse.Query.SearchInfo.TotalHits)
+	// fmt.Printf("Resultados totales: %d\n", apiResponse.Query.SearchInfo.TotalHits)
 
 	var wg sync.WaitGroup
-	resultChan := make(chan GetBirdImageDetailResult, 100) // Canal para resultados
+	resultChan := make(chan GetBirdImageDetailResult, 15) // Canal para resultados
 
 	// Iterar sobre cada título
 	for _, result := range apiResponse.Query.Search {
 		// Eliminamos "File:" del título
 		sanitizedTitle := removePrefix(result.Title, "File:")
-		fmt.Printf("Título: %s\n", sanitizedTitle)
+		//fmt.Printf("Título: %s\n", sanitizedTitle)
 
 		wg.Add(1) // Incrementar el contador de goroutines
 

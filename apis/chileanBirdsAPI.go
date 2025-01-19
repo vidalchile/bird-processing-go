@@ -21,9 +21,9 @@ func GetBirdsTest() ([]models.Bird, error) {
 		{
 			UID: "76-buteo-albigula",
 			Name: models.BirdName{
-				Spanish: "Aguilucho Chico",
-				English: "White-throated Hawk",
-				Latin:   "Buteo albigula",
+				Spanish: "Martín Pescador",
+				English: "Ringed Kingfisher",
+				Latin:   "Ceryle torquata",
 			},
 			Images: models.BirdImages{
 				Main:  "https://aves.ninjas.cl/api/site/assets/files/3099/17082018024245aguilucho_chico_tomas_rivas_web.200x0.jpg",
@@ -35,24 +35,6 @@ func GetBirdsTest() ([]models.Bird, error) {
 				Parent: "https://aves.ninjas.cl/api/birds",
 			},
 			Sort: 0,
-		},
-		{
-			UID: "46-lophonetta-specularioides",
-			Name: models.BirdName{
-				Spanish: "Pato Juarjual",
-				English: "Crested Duck",
-				Latin:   "Lophonetta specularioides",
-			},
-			Images: models.BirdImages{
-				Main:  "https://aves.ninjas.cl/api/site/assets/files/3102/18082018072023pato_juarjual_pedro_valencia_web.200x0.jpg",
-				Full:  "https://aves.ninjas.cl/api/site/assets/files/3102/18082018072023pato_juarjual_pedro_valencia_web.jpg",
-				Thumb: "https://aves.ninjas.cl/api/site/assets/files/3102/18082018072023pato_juarjual_pedro_valencia_web.200x0.jpg",
-			},
-			Links: models.BirdLinks{
-				Self:   "https://aves.ninjas.cl/api/birds/98-haematopus-palliatus",
-				Parent: "https://aves.ninjas.cl/api/birds",
-			},
-			Sort: 1,
 		},
 	}
 

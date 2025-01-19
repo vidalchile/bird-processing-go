@@ -60,6 +60,8 @@ func fetchAndParseJSON(url string, response interface{}, useCustomClient bool) e
 
 	// Verificar que el código de estado HTTP sea 200 OK
 	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		log.Printf("Error HTTP %d: %s", resp.StatusCode, body)
 		// Si el código de estado es diferente de 200, devolver un error con el código y URL
 		return fmt.Errorf("error en la respuesta HTTP: código %d, URL: %s", resp.StatusCode, url)
 	}
